@@ -15,7 +15,8 @@ const Regione = {
     SARDEGNA: "Sardegna",
     SICILIA: "Sicilia",
     TOSCANA: "Toscana",
-    TRENTINO_ALTO_ADIGE: "Trentino-Alto Adige",
+    TRENTO: "Trentino-Alto Adige - Trento",
+    BOLZANO: "Trentino-Alto Adige - Bolzano",
     UMBRIA: "Umbria",
     VALLE_D_AOSTA: "Valle d'Aosta",
     VENETO: "Veneto",
@@ -41,7 +42,8 @@ const regioniToComuni = {
     SARDEGNA: ['Cagliari', 'Nuoro', 'Oristano', 'Sassari', 'Sud Sardegna'],
     SICILIA: ['Palermo', 'Agrigento', 'Caltanissetta', 'Catania', 'Enna', 'Messina', 'Ragusa', 'Siracusa', 'Trapani'],
     TOSCANA: ['Firenze', 'Arezzo', 'Carrara', 'Grosseto', 'Livorno', 'Lucca', 'Massa', 'Pisa', 'Pistoia', 'Prato', 'Siena'],
-    TRENTINO_ALTO_ADIGE: ['Trento', 'Bolzano'],
+    TRENTO: ['Trento'],
+    BOLZANO: ['Bolzano'],
     UMBRIA: ['Perugia', 'Terni'],
     VALLE_D_AOSTA: ["Aosta"],
     VENETO: ['Venezia', 'Belluno', 'Padova', 'Rovigo', 'Treviso', 'Verona', 'Vicenza'],
@@ -735,6 +737,7 @@ const soglieInpsToPercentualeMarginale = {
 }
 
 const RegolaImponibile = {
+    UNI: 0.1,
     EXTENSION: 0.5,
     STANDARD: 1,
     NORD: 0.3,
@@ -758,15 +761,16 @@ const regioneToRegola = {
     SARDEGNA: RegolaImponibile.MEZZOGIORNO,
     SICILIA: RegolaImponibile.MEZZOGIORNO,
     TOSCANA: RegolaImponibile.NORD,
-    TRENTINO_ALTO_ADIGE: RegolaImponibile.NORD,
+    TRENTO: RegolaImponibile.NORD,
+    BOLZANO: RegolaImponibile.NORD,
     UMBRIA: RegolaImponibile.NORD,
     VALLE_D_AOSTA: RegolaImponibile.NORD,
     VENETO: RegolaImponibile.NORD,
 }
 
-function calcolaNetto(ral, regione, comune, hasAgevolazione, comuneDef, isExtension) {
+function calcolaNetto(ral, regione, comune, hasAgevolazione, comuneDef, isExtension, isUni) {
     const inps = calcolaInps(ral);
-    const baseImponibileEffettiva = baseImponibile(ral, regione, hasAgevolazione, isExtension);
+    const baseImponibileEffettiva = baseImponibile(ral, regione, hasAgevolazione, isExtension, isUni);
     const irpefTotale = calcolaIrpefTotale(baseImponibileEffettiva, regione, comune, comuneDef);
     const detrazioni = calcolaDetrazioni(baseImponibileEffettiva);
     const irpefNetto = calcolaIrpefNetto(irpefTotale, detrazioni);
@@ -774,10 +778,18 @@ function calcolaNetto(ral, regione, comune, hasAgevolazione, comuneDef, isExtens
 }
 
 // TODO: - inps calculated 2 times
-function baseImponibile(lordo, regione, hasAgevolazione, isExtension) {
+function baseImponibile(lordo, regione, hasAgevolazione, isExtension, isUni) {
     const inps = calcolaInps(lordo);
     const imponibileStandard = lordo - inps;
-    const regola = (hasAgevolazione) ? ( (isExtension) ? RegolaImponibile.EXTENSION: regioneToRegola[regione]) : RegolaImponibile.STANDARD;
+    const regola = (hasAgevolazione) ? 
+        (isUni ) ?
+        RegolaImponibile.UNI:
+            (
+            ( (isExtension) ? 
+                RegolaImponibile.EXTENSION: 
+                regioneToRegola[regione])
+                )
+        : RegolaImponibile.STANDARD;
     return _calcolaBaseImponibile(imponibileStandard, regola);
 }
 

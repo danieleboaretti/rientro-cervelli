@@ -2,17 +2,21 @@ function preRender() {
 $("#imponibileInfo").tooltip();
 $("#comuneWarning").tooltip();
 addRegionToOptions(nomiRegioni);
+addExtensionToOptions()
+addUniToOptions()
 $('#region option[value="Lazio"]').attr("selected", "selected");
 addComuniToOptions(regioniToComuni);
 addEditableRegionalIrpef(comuniToScaglioniIrpef);
     $(document).on('submit', '#submit-salary', () => {
-        $("#dopo5anni").show('slow');
+        $("#dopo5anni").hide();
         fillTables();
         $("#body").show('slow');
         return false;
     });
     //$('#comune option[value="Roma"]').attr("selected", "selected");
     $("#region").change(() => addComuniToOptions(regioniToComuni));
+    $("#extension").change();
+    $("#uni").change();
 }
 
 function fillTables() {
@@ -23,9 +27,10 @@ function fillTables() {
     const comuneDef = {
         1_000_000_000: $('#customComune').val()/100,
     }
-    const extension = $('#dopo5anni').val()=='sì';
-    const standardSalary = calcolaNetto(ral, regione, comune, false, comuneDef, false);
-    const rientroSalary = calcolaNetto(ral, regione, comune, true, comuneDef, extension);
+    const extension = $('#extension').children("option:selected").text()=='sì';
+    const uni = $('#uni').children("option:selected").text()=='sì'; 
+    const standardSalary = calcolaNetto(ral, regione, comune, false, comuneDef, false, false);
+    const rientroSalary = calcolaNetto(ral, regione, comune, true, comuneDef, extension, uni);
 
     $('#nettoAnnualeS').text(Math.round(standardSalary/mensilita));
     $('#nettoAnnualeC').text(Math.round(rientroSalary/mensilita));
@@ -77,7 +82,7 @@ function fillTableTaxes(ral) {
 
     $('#imponibileIrpefS').text(Math.round(imponibileIrpefS/mensilita));
     $('#imponibileIrpefC').text(Math.round(imponibileIrpefC/mensilita));
-    const percentualeImponibile = regioneToRegola[regione] === 0.1 ? "90%" : "70%";
+    const percentualeImponibile =( $('#uni').children("option:selected").text()=='sì') ? "90%" :(( $('#extension').children("option:selected").text()=='sì') ? "50%" : (regioneToRegola[regione] === 0.1 ? "90%" : "70%"));
     $('#percentualeImponibile').text(percentualeImponibile);
 
     const standardIrpef = calcolaIrpef(imponibileIrpefS);
@@ -139,6 +144,28 @@ function addRegionToOptions(regioni) {
             text: regione
         }));
     }
+}
+
+function addExtensionToOptions() {
+        $('#extension').append($('<option>', {
+            value: true,
+            text: "sì"
+        }));
+        $('#extension').append($('<option>', {
+            value: false,
+            text: "no"
+        }));
+}
+
+function addUniToOptions() {
+    $('#uni').append($('<option>', {
+        value: true,
+        text: "sì"
+    }));
+    $('#uni').append($('<option>', {
+        value: false,
+        text: "no"
+    }));
 }
 
 function addComuniToOptions(regioniToComuni) {    
