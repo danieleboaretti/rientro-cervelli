@@ -6,7 +6,7 @@ $('#region option[value="Lazio"]').attr("selected", "selected");
 addComuniToOptions(regioniToComuni);
 addEditableRegionalIrpef(comuniToScaglioniIrpef);
     $(document).on('submit', '#submit-salary', () => {
-        $("#dopo5anni").hide();
+        $("#dopo5anni").show('slow');
         fillTables();
         $("#body").show('slow');
         return false;
@@ -23,9 +23,9 @@ function fillTables() {
     const comuneDef = {
         1_000_000_000: $('#customComune').val()/100,
     }
-
-    const standardSalary = calcolaNetto(ral, regione, comune, false, comuneDef);
-    const rientroSalary = calcolaNetto(ral, regione, comune, true, comuneDef);
+    const extension = $('#dopo5anni').val()=='sì';
+    const standardSalary = calcolaNetto(ral, regione, comune, false, comuneDef, false);
+    const rientroSalary = calcolaNetto(ral, regione, comune, true, comuneDef, extension);
 
     $('#nettoAnnualeS').text(Math.round(standardSalary/mensilita));
     $('#nettoAnnualeC').text(Math.round(rientroSalary/mensilita));
