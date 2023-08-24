@@ -42,11 +42,11 @@ const regioniToComuni = {
     SARDEGNA: ['Cagliari', 'Nuoro', 'Oristano', 'Sassari', 'Sud Sardegna'],
     SICILIA: ['Palermo', 'Agrigento', 'Caltanissetta', 'Catania', 'Enna', 'Messina', 'Ragusa', 'Siracusa', 'Trapani'],
     TOSCANA: ['Firenze', 'Arezzo', 'Carrara', 'Grosseto', 'Livorno', 'Lucca', 'Massa', 'Pisa', 'Pistoia', 'Prato', 'Siena'],
-    TRENTO: ['Trento'],
+    TRENTO: ['Trento', 'Rovereto'],
     BOLZANO: ['Bolzano'],
     UMBRIA: ['Perugia', 'Terni'],
     VALLE_D_AOSTA: ["Aosta"],
-    VENETO: ['Venezia', 'Belluno', 'Padova', 'Rovigo', 'Treviso', 'Verona', 'Vicenza'],
+    VENETO: ['Venezia', 'Belluno', 'Padova', 'Abano Terme', 'Rovigo', 'Treviso', 'Verona', 'Vicenza'],
 }
 
 const regioniToScaglioniIrpef = {
@@ -682,6 +682,9 @@ const comuniToScaglioniIrpef = {
     'Padova': {
         15_000: 0,
         1_000_000_000: 0.007,
+    },
+    'Abano Terme': {
+        1_000_000_000: 0.008,
     },
     'Rovigo': {
         10_000: 0,
