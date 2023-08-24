@@ -15,8 +15,6 @@ addEditableRegionalIrpef(comuniToScaglioniIrpef);
     });
     //$('#comune option[value="Roma"]').attr("selected", "selected");
     $("#region").change(() => addComuniToOptions(regioniToComuni));
-    $("#extension").change();
-    $("#uni").change();
 }
 
 function fillTables() {
@@ -76,9 +74,10 @@ function fillTableTaxes(ral) {
     $('#taxInpsS').text(Math.round(inps/mensilita));
     $('#taxInpsC').text(Math.round(inps/mensilita));
 
-
+    const extension = $('#extension').children("option:selected").text()=='sì';
+    const uni = $('#uni').children("option:selected").text()=='sì'; 
     const imponibileIrpefS = baseImponibile(ral, regione, false);
-    const imponibileIrpefC = baseImponibile(ral, regione, true);
+    const imponibileIrpefC = baseImponibile(ral, regione, true, extension, uni);
 
     $('#imponibileIrpefS').text(Math.round(imponibileIrpefS/mensilita));
     $('#imponibileIrpefC').text(Math.round(imponibileIrpefC/mensilita));
@@ -234,6 +233,12 @@ $(function () {
         $('#submit-salary').submit();          
     });
     $("#customComune").on("input", function(){
+        $('#submit-salary').submit();          
+    });
+    $("#extension").on("input", function(){
+        $('#submit-salary').submit();          
+    });
+    $("#uni").on("input", function(){
         $('#submit-salary').submit();          
     });
 });

@@ -659,7 +659,9 @@ const comuniToScaglioniIrpef = {
     'Trento': {
         1_000_000_000: 0,
     },
-
+    'Rovereto': {
+        1_000_000_000: 0,
+    },
     'Perugia': {
         // 12_500: 0,
         1_000_000_000: 0.008,
