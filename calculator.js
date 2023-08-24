@@ -735,6 +735,7 @@ const soglieInpsToPercentualeMarginale = {
 }
 
 const RegolaImponibile = {
+    EXTENSION: 0.5,
     STANDARD: 1,
     NORD: 0.3,
     MEZZOGIORNO: 0.1,
@@ -763,9 +764,9 @@ const regioneToRegola = {
     VENETO: RegolaImponibile.NORD,
 }
 
-function calcolaNetto(ral, regione, comune, hasAgevolazione, comuneDef) {
+function calcolaNetto(ral, regione, comune, hasAgevolazione, comuneDef, isExtension) {
     const inps = calcolaInps(ral);
-    const baseImponibileEffettiva = baseImponibile(ral, regione, hasAgevolazione);
+    const baseImponibileEffettiva = baseImponibile(ral, regione, hasAgevolazione, isExtension);
     const irpefTotale = calcolaIrpefTotale(baseImponibileEffettiva, regione, comune, comuneDef);
     const detrazioni = calcolaDetrazioni(baseImponibileEffettiva);
     const irpefNetto = calcolaIrpefNetto(irpefTotale, detrazioni);
@@ -773,10 +774,10 @@ function calcolaNetto(ral, regione, comune, hasAgevolazione, comuneDef) {
 }
 
 // TODO: - inps calculated 2 times
-function baseImponibile(lordo, regione, hasAgevolazione) {
+function baseImponibile(lordo, regione, hasAgevolazione, isExtension) {
     const inps = calcolaInps(lordo);
     const imponibileStandard = lordo - inps;
-    const regola = (hasAgevolazione) ? regioneToRegola[regione] : RegolaImponibile.STANDARD;
+    const regola = (hasAgevolazione) ? ( (isExtension) ? RegolaImponibile.EXTENSION: regioneToRegola[regione]) : RegolaImponibile.STANDARD;
     return _calcolaBaseImponibile(imponibileStandard, regola);
 }
 
